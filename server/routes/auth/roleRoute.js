@@ -6,13 +6,17 @@ import {
   deleteRole
 } from '../../controllers/auth/roleController.js'
 
-import { authorize } from '../../middleware/authorizeMiddleware.js'
+import {
+  authenticate,
+  authorize
+} from '../../middleware/authorizeMiddleware.js'
+
 import { PERMISSIONS } from '../../config/permissions.js'
 import express from 'express'
 
 const router = express.Router()
 
-//authorize('role.list')
+router.use(authenticate)
 
 router.post('/', authorize(PERMISSIONS.ROLE.CREATE), createRole)
 router.get('/', authorize(PERMISSIONS.ROLE.LIST), getAllRoles)
