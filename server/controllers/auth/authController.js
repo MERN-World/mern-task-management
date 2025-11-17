@@ -8,7 +8,7 @@ import {
   verifyRefreshToken,
   revokeAllUserTokens,
   revokeRefreshToken
-} from '../../services/authService.js'
+} from '../../services/auth/authService.js'
 
 export const login = async (req, res) => {
   try {

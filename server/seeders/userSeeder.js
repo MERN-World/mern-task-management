@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import User from "../models/User.js";
 import Role from "../models/Role.js";
 import Permission from "../models/Permission.js";
-import {hashPassword} from '../services/authService.js'
+import {hashPassword} from '../services/auth/authService.js'
 
 export const seedUsers = async () => {
   const email = "superadmin@example.com";

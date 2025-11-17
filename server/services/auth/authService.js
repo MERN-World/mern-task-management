@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid'
 import bcrypt from 'bcrypt'
-import { env } from '../config/env.js'
+import { env } from '../../config/env.js'
 import jwt from 'jsonwebtoken'
-import RefreshToken from '../models/RefreshToken.js'
+import RefreshToken from '../../models/RefreshToken.js'
 
 export const hashPassword = async (password) => {
   return await bcrypt.hash(password, env.PASSWORD_SALT)
@@ -20,7 +20,7 @@ export const generateAccessToken = async (user) => {
   }
 
   return {
-    token: jwt.sign(payload, env.JWT_SECRET, { expiresIn: env.ACCESS_EXPIRES }),
+    token: jwt.sign(payload, env.JWT_SECRET, { expiresIn: '1h'}),
     jti: payload.jti
   }
 }
@@ -35,18 +35,15 @@ export const generateRefreshToken = async ({ userId, ip, deviceInfo }) => {
     Date.now() + env.REFRESH_DAYS * 24 * 60 * 60 * 1000
   )
 
-  await RefreshToken.findOneAndUpdate(
-    { user: userId },
-    {
-      jti,
-      tokenHash,
-      createdByIp: ip,
-      expiresAt,
-      deviceInfo,
-      revokedAt: null
-    },
-    { new: true, upsert: true }
-  )
+  await RefreshToken.create({
+    user: userId,
+    jti,
+    tokenHash,
+    createdByIp: ip,
+    expiresAt,
+    deviceInfo
+  });
+
   return { token: plainToken, jti, expiresAt }
 }
 
